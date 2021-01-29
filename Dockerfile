@@ -30,15 +30,12 @@ WORKDIR /tmp
 
 # --without-mail since it can't compile with Alpine libcurl probably because of missing LDAP
 # embed the cryptopp and zstd for pure static
+# --localstatedir=/ becomes the /urbackup state dir at runtime
 RUN CORES=$(grep -c '^processor' /proc/cpuinfo); \
     export MAKEFLAGS="-j$((CORES+1)) -l${CORES}"; \
-    mkdir /urbackup && \
     CFLAGS="-static -O3" LDFLAGS="-static -O3" CXXFLAGS="-static -O3" \
-    ./configure --without-mail --enable-embedded-cryptopp --enable-embedded-zstd --localstatedir=/config && \
+    ./configure --without-mail --enable-embedded-cryptopp --enable-embedded-zstd --localstatedir=/ && \
     make install
-
-# Create empty config directory to be able to test without a volume
-RUN mkdir -p /urbackup/ /config/urbackup && chown -R 1000:1000 /config/urbackup
 
 # 'Install' upx from image since upx isn't available for aarch64 from Alpine
 COPY --from=lansible/upx /usr/bin/upx /usr/bin/upx
@@ -69,7 +66,7 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
 # Copy empty config directory
-COPY --from=builder /config /config
+COPY --from=builder /urbackup /urbackup
 
 # Copy binaries
 COPY --from=builder \
@@ -83,8 +80,7 @@ COPY --from=builder \
 
 WORKDIR /config
 USER urbackup
-# ENTRYPOINT [ "/usr/local/bin/urbackupsrv", "run", "--config", "/config", "--sqlite-tmpdir", "/dev/shm" ]
-ENTRYPOINT [ "/usr/local/bin/urbackupsrv", "run", "--sqlite-tmpdir", "/dev/shm" ]
+ENTRYPOINT [ "/usr/local/bin/urbackupsrv", "run", "--config", "/urbackup", "--sqlite-tmpdir", "/dev/shm" ]
 EXPOSE 55413
 EXPOSE 55414
 EXPOSE 55415
