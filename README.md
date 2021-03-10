@@ -5,6 +5,8 @@
 [![Docker Version](https://images.microbadger.com/badges/version/lansible/urbackup-server:latest.svg)](https://microbadger.com/images/lansible/urbackup-server:latest)
 [![Docker Size/Layers](https://images.microbadger.com/badges/image/lansible/urbackup-server:latest.svg)](https://microbadger.com/images/lansible/urbackup-server:latest)
 
+```console
+docker run -p 55414:55414 -v "$PWD/urbackup":/urbackup -v "$PWD/data":/data urbackup
 ```
 
 ## Credits

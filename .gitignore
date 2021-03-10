@@ -1,2 +1,6 @@
 .idea/
 .vscode/
+
+# local test directories
+data/
+urbackup/
