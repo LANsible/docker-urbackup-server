@@ -5,8 +5,14 @@
 [![Docker Version](https://images.microbadger.com/badges/version/lansible/urbackup-server:latest.svg)](https://microbadger.com/images/lansible/urbackup-server:latest)
 [![Docker Size/Layers](https://images.microbadger.com/badges/image/lansible/urbackup-server:latest.svg)](https://microbadger.com/images/lansible/urbackup-server:latest)
 
+Make sure you set the backupfolder to /backups in the webinterface on first startup!
+
+## Test locally
+
+Make sure these directories are created as 1000:1000 otherwise chown or run the container with --user
 ```console
-docker run -p 55414:55414 -v "$PWD/urbackup":/urbackup -v "$PWD/data":/data urbackup
+# mkdir config backups
+#  docker run --read-only -p 55414:55414 -v "$PWD/config":/urbackup -v "$PWD/backups":/backups urbackup
 ```
 
 ## Credits
